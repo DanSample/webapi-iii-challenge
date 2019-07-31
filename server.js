@@ -1,5 +1,5 @@
 const express = require('express');
-const { logger } = require('./middleware.js');
+const { logger } = require('./middleware');
 
 const server = express();
 
