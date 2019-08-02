@@ -12,7 +12,7 @@ function logger(req, res, next) {
 const validateUserId = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await db.findById(id);
+    const user = await db.getById(id);
     if (user) {
       req.user = user;
       next();
@@ -20,7 +20,7 @@ const validateUserId = async (req, res, next) => {
       res.status(400).json({ message: 'invalid user id' });
     }
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ errorMessage: 'Something went wrong', error });
   }
 };
 
@@ -37,7 +37,15 @@ const validateUser = (req, res, next) => {
 };
 
 const validatePost = (req, res, next) => {
-  console.log();
+  const { body } = req;
+  if (Object.keys(body).length === 0) {
+    return res.status(400).json({ message: 'missing post data' });
+  }
+  const { text } = body;
+  if (!text) {
+    return res.status(400).json({ message: 'missing required text field' });
+  }
+  next();
 };
 
 module.exports = {
